@@ -5,7 +5,7 @@
     <key>CFBundleExecutable</key>
     <string>MailtoHandler</string>
     <key>CFBundleIdentifier</key>
-    <string>com.voicenpo.mailtohandler</string>
+    <string>npo.voice.mailtohandler</string>
     <key>CFBundleName</key>
     <string>Mailto Handler</string>
     <key>CFBundleIconFile</key>
