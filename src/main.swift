@@ -3,7 +3,7 @@ import Foundation
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var window: NSWindow?
-    private var textField: NSTextField?
+    private var textView: NSTextView?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenu()
@@ -66,8 +66,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func showUI() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 150),
-            styleMask: [.titled, .closable],
+            contentRect: NSRect(x: 0, y: 0, width: 500, height: 200),
+            styleMask: [.titled, .closable, .resizable],
             backing: .buffered,
             defer: false
         )
@@ -77,15 +77,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = NSView(frame: window.contentRect(forFrameRect: window.frame))
         
         let label = NSTextField(labelWithString: "Compose URL Template:")
-        label.frame = NSRect(x: 20, y: 90, width: 460, height: 20)
+        label.frame = NSRect(x: 20, y: 160, width: 460, height: 20)
         contentView.addSubview(label)
         
-        let textField = NSTextField(frame: NSRect(x: 20, y: 60, width: 460, height: 24))
+        let scrollView = NSScrollView(frame: NSRect(x: 20, y: 80, width: 460, height: 72))
+        scrollView.hasVerticalScroller = true
+        scrollView.hasHorizontalScroller = false
+        scrollView.autohidesScrollers = true
+        scrollView.borderType = .bezelBorder
+        
+        let textView = NSTextView(frame: scrollView.bounds)
+        textView.isVerticallyResizable = true
+        textView.isHorizontallyResizable = false
+        textView.autoresizingMask = [.width]
+        textView.textContainer?.widthTracksTextView = true
+        textView.textContainer?.containerSize = NSSize(width: scrollView.contentSize.width, height: CGFloat.greatestFiniteMagnitude)
+        textView.font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
+        
         let defaultURL = "https://mail.google.com/mail/?view=cm&to={recipient}&cc={cc}&bcc={bcc}&su={subject}&body={body}"
-        textField.stringValue = UserDefaults.standard.string(forKey: "ComposeURLTemplate") ?? defaultURL
-        textField.placeholderString = defaultURL
-        contentView.addSubview(textField)
-        self.textField = textField
+        textView.string = UserDefaults.standard.string(forKey: "ComposeURLTemplate") ?? defaultURL
+        
+        scrollView.documentView = textView
+        contentView.addSubview(scrollView)
+        self.textView = textView
         
         let button = NSButton(frame: NSRect(x: 20, y: 20, width: 200, height: 32))
         button.title = "Register mailto: Handler"
@@ -102,7 +116,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func registerHandler() {
-        guard let url = textField?.stringValue, !url.isEmpty else { return }
+        guard let url = textView?.string, !url.isEmpty else { return }
         
         UserDefaults.standard.set(url, forKey: "ComposeURLTemplate")
         
