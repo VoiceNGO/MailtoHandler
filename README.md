@@ -2,7 +2,9 @@
 
 [**Download MailtoHandler.dmg**](https://github.com/VoiceNGO/MailtoHandler/raw/main/MailtoHandler.dmg)
 
-A simple macOS app that opens mailto: links in a web-based email service instead of Mail.app. Optionally select a specific browser to open the links in.
+A simple app that captures mailto: links and redirects them to whatever webmail provider you use.
+
+![Screenshot](Screenshot.png)
 
 ## Installation
 
